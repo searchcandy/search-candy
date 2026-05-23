@@ -34,16 +34,48 @@ class GraphQLHTTPError extends Error {
   }
 }
 
-type GraphQLResponse = {
-  data?: SearchCandyGraphQLData
+type GraphQLResponse<TData extends SearchCandyGraphQLData> = {
+  data?: TData
   errors?: unknown
 }
 
-type FetchConnectionOptions<T> = {
+type FetchConnectionOptions<TNode, TData extends SearchCandyGraphQLData> = {
   query: string
   variables?: Record<string, unknown>
-  getConnection: (data: SearchCandyGraphQLData) => SearchCandyConnection<T> | null | undefined
+  getConnection: (data: TData) => SearchCandyConnection<TNode> | null | undefined
   limit?: number
+}
+
+type PostURIConnectionData = {
+  posts?: SearchCandyConnection<SearchCandyURIEntry> | null
+}
+
+type PostsConnectionData = {
+  posts?: SearchCandyConnection<SearchCandyPost> | null
+}
+
+type CategoriesConnectionData = {
+  categories?: SearchCandyConnection<SearchCandyCategory> | null
+}
+
+type CategoryData = {
+  category?: SearchCandyCategory | null
+}
+
+type PostData = {
+  post?: SearchCandyPost | null
+}
+
+type GlossaryURIConnectionData = {
+  pages?: SearchCandyConnection<SearchCandyURIEntry> | null
+}
+
+type GlossarySitemapConnectionData = {
+  pages?: SearchCandyConnection<SearchCandyGlossarySitemapEntry> | null
+}
+
+type GlossaryEntryData = {
+  pageBy?: SearchCandyGlossaryEntry | null
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -89,10 +121,10 @@ function getGraphQLHeaders(): HeadersInit {
   return headers
 }
 
-async function fetchAPI(
+async function fetchAPI<TData extends SearchCandyGraphQLData = SearchCandyGraphQLData>(
   query: string,
   { variables, revalidate = DEFAULT_REVALIDATE }: SearchCandyFetchAPIOptions = {}
-): Promise<SearchCandyGraphQLData> {
+): Promise<TData> {
   let lastError: unknown
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -116,12 +148,12 @@ async function fetchAPI(
         throw err
       }
 
-      const json = (await res.json()) as GraphQLResponse
+      const json = (await res.json()) as GraphQLResponse<TData>
       if (json.errors) {
         console.error('GraphQL errors:', json.errors, { variables })
         throw new Error('GraphQL query returned errors')
       }
-      return json.data ?? {}
+      return json.data ?? ({} as TData)
     } catch (err) {
       lastError = err
       if (err instanceof GraphQLAccessConfigError || attempt >= MAX_ATTEMPTS) throw err
@@ -146,20 +178,20 @@ async function fetchWithBuildFallback<T>(
   }
 }
 
-async function fetchConnectionNodes<T>({
+async function fetchConnectionNodes<TNode, TData extends SearchCandyGraphQLData>({
   query,
   variables = {},
   getConnection,
   limit = Infinity,
-}: FetchConnectionOptions<T>): Promise<T[]> {
-  const nodes: T[] = []
+}: FetchConnectionOptions<TNode, TData>): Promise<TNode[]> {
+  const nodes: TNode[] = []
   let after: string | null = null
 
   while (nodes.length < limit) {
     const first = Number.isFinite(limit)
       ? Math.min(WPGRAPHQL_PAGE_SIZE, limit - nodes.length)
       : WPGRAPHQL_PAGE_SIZE
-    const data = await fetchAPI(query, { variables: { ...variables, first, after } })
+    const data = await fetchAPI<TData>(query, { variables: { ...variables, first, after } })
     const connection = getConnection(data)
 
     if (!connection) {
@@ -182,7 +214,7 @@ export async function getAllPostURIs(): Promise<string[]> {
   const nodes = await fetchWithBuildFallback(
     'getAllPostURIs',
     () =>
-      fetchConnectionNodes<SearchCandyURIEntry>({
+      fetchConnectionNodes<SearchCandyURIEntry, PostURIConnectionData>({
         query: `
         query AllPostURIs($first: Int!, $after: String) {
           posts(first: $first, after: $after) {
@@ -191,7 +223,7 @@ export async function getAllPostURIs(): Promise<string[]> {
           }
         }
       `,
-        getConnection: (data) => data.posts as SearchCandyConnection<SearchCandyURIEntry> | undefined,
+        getConnection: (data) => data.posts,
       }),
     []
   )
@@ -224,7 +256,7 @@ export async function getPostsForListing({
   return fetchWithBuildFallback(
     'getPostsForListing',
     () =>
-      fetchConnectionNodes<SearchCandyPost>({
+      fetchConnectionNodes<SearchCandyPost, PostsConnectionData>({
         query: `
         ${POST_FIELDS}
         query PostsForListing($first: Int!, $after: String) {
@@ -234,7 +266,7 @@ export async function getPostsForListing({
           }
         }
       `,
-        getConnection: (data) => data.posts as SearchCandyConnection<SearchCandyPost> | undefined,
+        getConnection: (data) => data.posts,
         limit: first,
       }),
     []
@@ -248,7 +280,7 @@ export async function getPostsByCategorySlug({
   return fetchWithBuildFallback(
     `getPostsByCategorySlug(${slug})`,
     () =>
-      fetchConnectionNodes<SearchCandyPost>({
+      fetchConnectionNodes<SearchCandyPost, PostsConnectionData>({
         query: `
         query PostsByCategorySlug($slug: String!, $first: Int!, $after: String) {
           posts(first: $first, after: $after, where: { categoryName: $slug, orderby: { field: DATE, order: DESC } }) {
@@ -266,7 +298,7 @@ export async function getPostsByCategorySlug({
         }
       `,
         variables: { slug },
-        getConnection: (data) => data.posts as SearchCandyConnection<SearchCandyPost> | undefined,
+        getConnection: (data) => data.posts,
         limit: first,
       }),
     []
@@ -277,7 +309,7 @@ export async function getAllCategories(): Promise<SearchCandyCategory[]> {
   return fetchWithBuildFallback(
     'getAllCategories',
     () =>
-      fetchConnectionNodes<SearchCandyCategory>({
+      fetchConnectionNodes<SearchCandyCategory, CategoriesConnectionData>({
         query: `
         query AllCategories($first: Int!, $after: String) {
           categories(first: $first, after: $after, where: { hideEmpty: true }) {
@@ -286,8 +318,7 @@ export async function getAllCategories(): Promise<SearchCandyCategory[]> {
           }
         }
       `,
-        getConnection: (data) =>
-          data.categories as SearchCandyConnection<SearchCandyCategory> | undefined,
+        getConnection: (data) => data.categories,
       }),
     []
   )
@@ -295,7 +326,7 @@ export async function getAllCategories(): Promise<SearchCandyCategory[]> {
 
 export const getCategoryBySlug: (slug: string) => Promise<SearchCandyCategory | null> = cache(
   async (slug: string) => {
-    const data = await fetchAPI(
+    const data = await fetchAPI<CategoryData>(
       `
       query CategoryBySlug($id: ID!) {
         category(id: $id, idType: SLUG) {
@@ -308,7 +339,7 @@ export const getCategoryBySlug: (slug: string) => Promise<SearchCandyCategory | 
     `,
       { variables: { id: slug } }
     )
-    return (data.category ?? null) as SearchCandyCategory | null
+    return data.category ?? null
   }
 )
 
@@ -318,7 +349,7 @@ export async function getPostsForFeed({
   return fetchWithBuildFallback(
     'getPostsForFeed',
     () =>
-      fetchConnectionNodes<SearchCandyPost>({
+      fetchConnectionNodes<SearchCandyPost, PostsConnectionData>({
         query: `
         query PostsForFeed($first: Int!, $after: String) {
           posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
@@ -335,7 +366,7 @@ export async function getPostsForFeed({
           }
         }
       `,
-        getConnection: (data) => data.posts as SearchCandyConnection<SearchCandyPost> | undefined,
+        getConnection: (data) => data.posts,
         limit: first,
       }),
     []
@@ -348,7 +379,7 @@ export async function getRecentPostsForHome({
   return fetchWithBuildFallback(
     'getRecentPostsForHome',
     () =>
-      fetchConnectionNodes<SearchCandyPost>({
+      fetchConnectionNodes<SearchCandyPost, PostsConnectionData>({
         query: `
         query RecentPostsForHome($first: Int!, $after: String) {
           posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
@@ -365,7 +396,7 @@ export async function getRecentPostsForHome({
           }
         }
       `,
-        getConnection: (data) => data.posts as SearchCandyConnection<SearchCandyPost> | undefined,
+        getConnection: (data) => data.posts,
         limit: first,
       }),
     []
@@ -376,7 +407,7 @@ export async function getRecentPostsForHome({
 // share a single fetch per request.
 export const getPostBySlug: (slug: string) => Promise<SearchCandyPost | null> = cache(
   async (slug: string) => {
-    const data = await fetchAPI(
+    const data = await fetchAPI<PostData>(
       `
     ${POST_FIELDS}
     query PostBySlug($id: ID!) {
@@ -390,7 +421,7 @@ export const getPostBySlug: (slug: string) => Promise<SearchCandyPost | null> = 
   `,
       { variables: { id: slug } }
     )
-    return (data.post ?? null) as SearchCandyPost | null
+    return data.post ?? null
   }
 )
 
@@ -400,7 +431,7 @@ export async function getAllGlossaryURIs(): Promise<string[]> {
   const nodes = await fetchWithBuildFallback(
     'getAllGlossaryURIs',
     () =>
-      fetchConnectionNodes<SearchCandyURIEntry>({
+      fetchConnectionNodes<SearchCandyURIEntry, GlossaryURIConnectionData>({
         query: `
         query GlossaryURIs($first: Int!, $after: String) {
           pages(first: $first, after: $after, where: { parent: "3592" }) {
@@ -409,7 +440,7 @@ export async function getAllGlossaryURIs(): Promise<string[]> {
           }
         }
       `,
-        getConnection: (data) => data.pages as SearchCandyConnection<SearchCandyURIEntry> | undefined,
+        getConnection: (data) => data.pages,
       }),
     []
   )
@@ -422,7 +453,7 @@ export async function getAllGlossaryEntriesForSitemap(): Promise<
   return fetchWithBuildFallback(
     'getAllGlossaryEntriesForSitemap',
     () =>
-      fetchConnectionNodes<SearchCandyGlossarySitemapEntry>({
+      fetchConnectionNodes<SearchCandyGlossarySitemapEntry, GlossarySitemapConnectionData>({
         query: `
         query GlossaryEntries($first: Int!, $after: String) {
           pages(first: $first, after: $after, where: { parent: "3592", orderby: { field: TITLE, order: ASC } }) {
@@ -431,8 +462,7 @@ export async function getAllGlossaryEntriesForSitemap(): Promise<
           }
         }
       `,
-        getConnection: (data) =>
-          data.pages as SearchCandyConnection<SearchCandyGlossarySitemapEntry> | undefined,
+        getConnection: (data) => data.pages,
       }),
     []
   )
@@ -441,7 +471,7 @@ export async function getAllGlossaryEntriesForSitemap(): Promise<
 export const getGlossaryEntryByURI: (
   uri: string
 ) => Promise<SearchCandyGlossaryEntry | null> = cache(async (uri: string) => {
-  const data = await fetchAPI(
+  const data = await fetchAPI<GlossaryEntryData>(
     `
     query GlossaryEntry($uri: String!) {
       pageBy(uri: $uri) {
@@ -456,5 +486,5 @@ export const getGlossaryEntryByURI: (
   `,
     { variables: { uri } }
   )
-  return (data.pageBy ?? null) as SearchCandyGlossaryEntry | null
+  return data.pageBy ?? null
 })

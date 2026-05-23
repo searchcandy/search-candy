@@ -7,6 +7,9 @@ const url = (path: string) => {
   return `${BASE}${withSlash}`
 }
 
+const hasCategoryURI = (category: SearchCandyCategory): category is SearchCandyCategory & { uri: string } =>
+  Boolean(category.uri)
+
 export default async function sitemap() {
   // Fetch the dynamic URI lists in parallel - they share no dependencies.
   const [postURIs, glossaryURIs, categories] = await Promise.all([
@@ -41,9 +44,9 @@ export default async function sitemap() {
   }))
 
   const categoryEntries = categories
-    .filter((category) => category.uri)
+    .filter(hasCategoryURI)
     .map((category) => ({
-      url: url(category.uri as string),
+      url: url(category.uri),
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.5,

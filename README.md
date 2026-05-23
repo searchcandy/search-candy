@@ -8,7 +8,8 @@ The app is a static/ISR Next.js App Router site backed by the existing WordPress
 
 - Next.js 16
 - React 19.2
-- Node 20.9+
+- Node 24.x
+- pnpm 10.33.4 via Corepack
 - App Router
 - CSS Modules
 - `next/font/google`
@@ -26,7 +27,7 @@ pnpm typecheck
 pnpm start
 ```
 
-Local development normally runs in WSL. If builds behave oddly, use the WSL shell with Node 20.9+ rather than Windows PowerShell, because the installed pnpm dependencies use WSL/Linux symlinks.
+Local development normally runs in WSL. If builds behave oddly, use the WSL shell with Node 24.x rather than Windows PowerShell, because the installed pnpm dependencies use WSL/Linux symlinks.
 
 ## Environment
 

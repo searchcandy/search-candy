@@ -6,7 +6,8 @@ Marketing site for the Search Candy eCommerce SEO consultancy. Next.js front-end
 
 - **Next.js 16** (App Router, Turbopack default)
 - **React 19.2**
-- **Node 20.9+** required
+- **Node 24.x** required
+- **pnpm 10.33.4** via Corepack (`packageManager` is pinned in `package.json`)
 - Plain `fetch` against GraphQL (no Apollo) — all data fetching happens in Server Components
 - `next/font/google` for Readex Pro, Unna, Nunito Sans
 - CSS Modules under `styles/`
@@ -55,7 +56,7 @@ components/
   footer.tsx             server component; plain anchors for static public navigation
   MobileMenu.tsx         server component; native Popover API, no React hydration
   NewsletterSignup.tsx   server component; posts to app/newsletter/route.ts
-  shareButton.tsx        client (navigator.share)
+  shareButton.tsx        server; native Web Share progressive enhancement
   fonts.ts              next/font/google exports
 ```
 

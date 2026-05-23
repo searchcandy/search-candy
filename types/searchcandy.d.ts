@@ -34,7 +34,7 @@ declare global {
     }
   }
 
-  type SearchCandyGraphQLData = Record<string, unknown>
+  type SearchCandyGraphQLData = object
 
   type SearchCandyImage = {
     sourceUrl?: string

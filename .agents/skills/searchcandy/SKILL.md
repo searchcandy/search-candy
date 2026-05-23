@@ -13,7 +13,8 @@ The site went through a big rebuild in 2026: from agency-template `pages/` Next 
 
 - **Next.js 16.2.6** (App Router, Turbopack default in 16)
 - **React 19.2.6** with the **React Compiler enabled** (`reactCompiler: true` in `next.config.ts`, `babel-plugin-react-compiler` in devDeps). Most manual `React.memo`/`useMemo`/`useCallback` is unnecessary as a result, but explicit `useCallback` for callbacks crossing component boundaries is still fine.
-- **Node 20.9+** required. Local dev uses Node 22 via nvm - `source $NVM_DIR/nvm.sh && nvm use 22` before running `next build`, `pnpm lint`, or `pnpm typecheck`.
+- **Node 24.x** required. Local dev uses nvm - `source $NVM_DIR/nvm.sh && nvm use 24` before running `next build`, `pnpm lint`, or `pnpm typecheck`.
+- **pnpm 10.33.4** via Corepack (`packageManager` is pinned in `package.json`). Vercel may keep selecting pnpm 9 unless Corepack is enabled for the project.
 - `next/font/google` for **Readex Pro**, **Unna**, **Nunito Sans** (see `components/fonts.ts`).
 - **CSS Modules** under `styles/` (`Home.module.css`, `Page.module.css`, `Insights.module.css`, `SinglePost.module.css`, `GlossaryIndex.module.css`, `GlossarySinglePage.module.css`) plus `globals.css`.
 - Path alias `@/*` -> project root via `tsconfig.json`. All imports use this style.
@@ -121,7 +122,7 @@ components/
   fonts.ts               next/font/google exports (server-safe)
   NewsletterSignup.tsx    server: no-JS form posts to app/newsletter/route.ts
   RecentWriting.tsx       server: 6 recent posts on homepage, plain anchors
-  shareButton.tsx         client: navigator.share, on glossary entries only
+  shareButton.tsx         server: native Web Share progressive enhancement, no React hydration
 ```
 
 `lib/content.ts` contains `optimisePostContentImages()`, a small server-side transform used only for WordPress post body HTML. Featured images use `next/image`; body images arrive from WordPress as raw trusted HTML, so the transform adds native `loading`/`decoding`/`fetchpriority` attributes without introducing a client boundary.
@@ -171,6 +172,7 @@ If WordPress has transient upstream failures at build time, list helpers can sti
 - `CF_ACCESS_CLIENT_ID` — Cloudflare Access service token client ID for server-side WPGraphQL requests. Production required.
 - `CF_ACCESS_CLIENT_SECRET` — Cloudflare Access service token secret for server-side WPGraphQL requests. Production required.
 - `WHOP_NEWSLETTER_PLAN_ID` — required for newsletter signups.
+- `ENABLE_EXPERIMENTAL_COREPACK` — set to `1` in Vercel if build logs keep selecting pnpm 9 instead of the `packageManager` pin.
 - Legacy media URLs under `/wp-content/uploads/:path*` are preserved by a Next.js `beforeFiles` rewrite whose destination is derived from `WP_GRAPHQL_ENDPOINT`. Keep this while old WordPress image URLs remain in content or backlinks.
 
 ## Conventions to keep when editing
@@ -214,7 +216,7 @@ If WordPress has transient upstream failures at build time, list helpers can sti
 2. Confirm required env vars are available before production builds: `WP_GRAPHQL_ENDPOINT`, `CF_ACCESS_CLIENT_ID`, `CF_ACCESS_CLIENT_SECRET`, and `WHOP_NEWSLETTER_PLAN_ID`.
 3. Run `pnpm install` then verify `./node_modules/.bin/next build` succeeds.
 4. If the build fails with GraphQL `401`/`403`, check Cloudflare Access and Vercel service-token env vars. If it fails with intermittent WP 500s, that's usually the upstream AIOSEO PHP issue.
-5. Local dev server: `pnpm dev` (or `./node_modules/.bin/next dev`). Don't forget `nvm use 22`.
+5. Local dev server: `pnpm dev` (or `./node_modules/.bin/next dev`). Don't forget `nvm use 24`.
 
 ## References
 
