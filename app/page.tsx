@@ -35,6 +35,8 @@ const homePageJsonLd = {
       sameAs: [
         'https://x.com/ColinMcDermott',
         'https://www.linkedin.com/in/colinmcdermott/',
+        'https://whop.com/@colin/',
+        'https://whop.com/blog/author/colin/',
       ],
       knowsAbout: [
         'Search engine optimisation',
