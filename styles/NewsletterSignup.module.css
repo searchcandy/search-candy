@@ -18,6 +18,10 @@ section.newsletter {
   border-top: 1px solid var(--articleBorderColor);
 }
 
+:global(.main):has(> section:last-child) + section.newsletter {
+  border-top: 0;
+}
+
 .newsletterInner {
   max-width: 560px;
   width: 100%;
