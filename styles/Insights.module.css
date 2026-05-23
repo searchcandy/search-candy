@@ -1,29 +1,44 @@
 .insightsPostsContainer {
     justify-content: center;
-    max-width: 1000px;
+    max-width: 1040px;
     margin: 0 auto;
+    padding: clamp(16px, 4vw, 36px) 12px;
 }
 
 .insightsPostCard {
+    color-scheme: dark;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 1.6em 2.2em;
+    padding: clamp(1.35em, 3vw, 2.2em);
     margin-top: 25px;
-    background-color: var(--offsetBackColor);
-    gap: 20px;
+    background-color: var(--articleBackColor);
+    color: var(--articleTextColor);
+    border: 1px solid var(--articleBorderColor);
+    gap: 24px;
 }
 
 .insightsPostCard h2 {
-    font-size: 34px;
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.08;
     margin-top: 5px;
     margin-bottom: auto;
+    text-wrap: balance;
 }
 
 .insightsPostCard h2 a:hover {
     color:var(--secondaryColor);
     text-decoration: underline;
+}
+
+.insightsPostsTitleMeta p {
+    color: var(--articleMutedTextColor);
+}
+
+.insightsPostCard img {
+    background-color: var(--darkBackColor);
+    border: 1px solid var(--articleBorderColor);
 }
 
 .paginationContainer {
@@ -40,17 +55,29 @@
     font-family: var(--sansUIFont);
 }
 
+.pagination a {
+    color: var(--secondaryColor);
+}
+
 /* Mobile rules */
 
 @media (max-width: 999px) {
     .insightsPostCard {
         flex-direction: column;
-        gap: 0;
+        gap: 14px;
     }
 }
 
 @media (max-width: 550px) {
+    .insightsPostsContainer {
+        padding: 0;
+    }
+    .insightsPostCard {
+        margin-top: 0;
+        border-left: 0;
+        border-right: 0;
+    }
     .paginationNumberItem {
-    display: none;
+        display: none;
     }
 }

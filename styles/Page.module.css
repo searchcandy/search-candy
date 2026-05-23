@@ -2,6 +2,7 @@
    Mirrors the homepage rhythm: dark intro band, then full-width content. */
 
 :global(.main) .pageIntro {
+  color-scheme: dark;
   background-color: var(--darkBackColor);
   color: var(--lightFontColor);
   padding: clamp(48px, 6vw, 96px) clamp(20px, 5vw, 60px);
@@ -130,4 +131,17 @@
   opacity: 0.75;
   margin: 0;
   padding: 12px 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(.main) .pageBody,
+  :global(.main) .hubPosts {
+    background-color: var(--darkBackColor);
+    color: var(--lightFontColor);
+  }
+
+  .hubPostsItem {
+    border-top: 1px solid var(--articleBorderColor);
+    padding-top: 18px;
+  }
 }

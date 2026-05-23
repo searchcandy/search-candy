@@ -12,8 +12,8 @@ export default function GlobalError({ error, reset }: SearchCandyErrorProps) {
           margin: 0,
           padding: '4rem 1.25rem',
           textAlign: 'center',
-          background: '#121212',
-          color: '#fafafa',
+          background: '#000',
+          color: '#f8f7f2',
           minHeight: '100vh',
         }}
       >

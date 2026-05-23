@@ -1,9 +1,11 @@
 .article {
+    color-scheme: dark;
+    color: var(--articleTextColor);
     font-size: 20px;
     margin: 0 auto;
     display: inline-flex;
     flex-direction: column;
-    padding: var(--flowSpace) 8px;
+    padding: clamp(24px, 4vw, var(--flowSpace)) 16px clamp(52px, 7vw, 88px);
     max-width: 880px;
 }
 
@@ -17,6 +19,9 @@
 
 .featuredPostWrapper {
     max-height: 387px;
+    overflow: hidden;
+    background-color: var(--darkBackColor);
+    border: 1px solid var(--articleBorderColor);
 }
 
 .postMetaContainer {
@@ -24,6 +29,7 @@
     flex-wrap: wrap;
     gap: 15px;
     flex-direction: row;
+    color: var(--articleMutedTextColor);
 }
 
 .postMeta p {
@@ -38,7 +44,8 @@
 .articleContainer {
     width: 100%;
     display: flex;
-    background-color: rgb(0 0 0 / 7%);
+    background-color: var(--articleBackColor);
+    color: var(--articleTextColor);
 }
 
 .article img:first-of-type {
@@ -48,8 +55,11 @@
 }
 
 .article h1 {
-    font-size: 2.6rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.35rem, 4vw, 3.6rem);
+    line-height: 1.02;
+    margin: clamp(18px, 3vw, 30px) 0 1rem;
+    color: var(--articleTextColor);
+    text-wrap: balance;
 }
 
 .article h1, .article h2, .article h3, .article h4, .article h5  {
@@ -58,28 +68,37 @@
 }
 
 .article h2  {
-    font-size: 2.2rem;
+    font-size: clamp(1.85rem, 3vw, 2.45rem);
     padding-bottom: 15px;
-    margin-top: 37px;
+    margin-top: 44px;
     margin-bottom: 32px;
-    border-bottom: solid 2px currentColor;
+    border-bottom: solid 1px var(--articleBorderColor);
+    color: var(--lightFontColor);
 }
 
 .article p {
     max-width: 625px;
     font-size: 21px;
-    line-height: 1.55em;
+    line-height: 1.62;
     font-weight: 300;
     margin-bottom: 18px;
+    text-wrap: pretty;
 }
 
 .article p a {
+    color: var(--lightFontColor);
     text-decoration-color: var(--secondaryColor);
+    text-decoration-thickness: 0.08em;
+}
+
+.article p a:hover {
+    color: var(--secondaryColor);
 }
 
 .article li {
     max-width: 575px;
     margin: 15px 0;
+    line-height: 1.55;
 }
 
 .article li::marker {
@@ -92,23 +111,32 @@
 
 .article figure {
     max-width: 100%;
-    margin: 22px 0;
+    margin: 26px 0;
+}
+
+.article blockquote,
+.article table,
+.article .infoBox {
+    background-color: var(--articlePanelColor);
+    border-color: var(--articleBorderColor);
 }
 
 .author {
+    color-scheme: light;
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    background: var(--lightBackColor);
+    background: var(--lightFontColor);
+    color: var(--greyFontColor);
     padding: 0px 7px;
     border-radius: 32px;
-    border: solid 1px black;
+    border: solid 1px var(--lightFontColor);
     scale: 0.8;
 }
 
 .author p a {
     text-decoration: none;
-    color: black;
+    color: var(--greyFontColor);
 }
 
 .author:hover {
@@ -121,17 +149,16 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .articleContainer {background-color: rgba(0,0,0,.3)}
     .article img:first-of-type {
-        opacity: 0.85;
+        opacity: 0.92;
     }
-  }
+}
 
-  /* Mobile rules */
+/* Mobile rules */
 
 @media (max-width: 600px) {
     .article {
-        padding: 0;
+        padding: 0 0 36px;
     }
     .article p, .article li {
         font-size: 17px !important;
@@ -140,9 +167,9 @@
         max-height: 230px;
     }
     .article h1 {
-        font-size: 2rem;
+        font-size: clamp(2rem, 12vw, 2.6rem);
         margin-bottom: 0;
-        padding: 12px;
+        padding: 14px 12px;
         margin: 0;
     }
     .postMetaContainer, .articleInner {

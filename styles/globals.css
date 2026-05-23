@@ -26,20 +26,40 @@ body > section {
 /* Root variables */
 
 :root {
-  --secondaryColor: #3d59ff;
-  --darkBackColor: #121212;
+  --secondaryColor: #3153ff;
+  --accentWarm: #f370c8;
+  --darkBackColor: #000;
+  --darkPanelColor: #080808;
+  --darkRaisedColor: #111;
+  --siteBackColor: #ffffff;
   --offsetBackColor: rgb(0 0 0 / 6%);
   --lightBackColor: #ffffff;
-  --lightFontColor: rgb(250, 250, 250);
+  --lightFontColor: rgb(248 247 242);
   --greyFontColor: #222;
+  --mutedFontColor: rgb(34 34 34 / 68%);
+  --articleBackColor: #000;
+  --articleTextColor: rgb(248 247 242);
+  --articleMutedTextColor: rgb(248 247 242 / 72%);
+  --articleBorderColor: rgb(248 247 242 / 18%);
+  --articlePanelColor: rgb(255 255 255 / 6%);
+  --focusColor: var(--secondaryColor);
   --flowSpace: 32px;
-  --serifUIFont: Georgia, -apple-system-ui-serif, ui-serif, 'Times New Roman';
-  --sansUIFont: -apple-system,'Segoe UI',system-ui,Roboto,sans-serif;
+  --serifUIFont: Georgia, -apple-system-ui-serif, ui-serif, "Times New Roman";
+  --sansUIFont: -apple-system, "Segoe UI", system-ui, Roboto, sans-serif;
+  accent-color: var(--secondaryColor);
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  :root {
+    --secondaryColor: color(display-p3 0.22 0.32 1);
+    --accentWarm: color(display-p3 0.94 0.34 0.76);
+  }
 }
 
 /* HTML + Body defaults */
 
 html {
+  background-color: var(--siteBackColor);
   color: var(--greyFontColor);
   max-width: 100vw;
   overflow-x: hidden;
@@ -55,6 +75,7 @@ html {
 
 body {
   margin:0;
+  background-color: var(--siteBackColor);
   font-family: var(--sansUIFont);
 }
 
@@ -117,6 +138,7 @@ nav ul li {
 /* Footer styles */
 
 footer {
+  color-scheme: dark;
   background-color: var(--darkBackColor);
   color: var(--lightFontColor);
   justify-content: center;
@@ -160,6 +182,11 @@ a {
 
 a:hover {
   color: var(--secondaryColor);
+}
+
+::selection {
+  background-color: var(--secondaryColor);
+  color: var(--lightFontColor);
 }
 
 p a {
@@ -246,7 +273,7 @@ section {
 
 .hamburgerIcon:focus-visible,
 .overlayMenuCloseButton:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--focusColor);
   outline-offset: 4px;
 }
 
@@ -321,11 +348,23 @@ figure img {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: rgb(250, 250, 250);
+    background-color: var(--darkBackColor);
+    color: var(--lightFontColor);
+    --siteBackColor: var(--darkBackColor);
     --secondaryColor: #f370c8;
-    --offsetBackColor: rgb(0 0 0 / 30%);
+    --accentWarm: #637cff;
+    --offsetBackColor: rgb(255 255 255 / 7%);
+    --mutedFontColor: rgb(248 247 242 / 68%);
+    --focusColor: var(--secondaryColor);
+  }
+  @supports (color: color(display-p3 1 1 1)) {
+    :root {
+      --secondaryColor: color(display-p3 0.98 0.34 0.78);
+      --accentWarm: color(display-p3 0.36 0.48 1);
+    }
   }
   .overlayMenu {
+    color-scheme: dark;
     background-color: var(--darkBackColor);
     color: var(--lightFontColor);
   }

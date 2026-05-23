@@ -1,14 +1,19 @@
 .articleOuter {
+    color-scheme: dark;
     display: flex;
     width: 100%;
     flex-direction: row;
     justify-content: center;
+    background-color: var(--articleBackColor);
+    color: var(--articleTextColor);
 }
 
 .articleHeader {
-    background-color: var(--offsetBackColor);
+    color-scheme: dark;
+    background-color: var(--articleBackColor);
+    color: var(--articleTextColor);
     width: 100%;
-    border-bottom: solid 1px;
+    border-bottom: solid 1px var(--articleBorderColor);
 }
 
 .article, .articleHeaderInner, .aside {
@@ -38,7 +43,7 @@
 }
 
 .article a[target="_blank"]:after {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0,0,256,256' width='18px' height='18px' fill-rule='nonzero'%3E%3Cg fill='black' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cg transform='scale(8.53333,8.53333)'%3E%3Cpath d='M25.98047,2.99023c-0.03726,0.00118 -0.07443,0.00444 -0.11133,0.00977h-5.86914c-0.36064,-0.0051 -0.69608,0.18438 -0.87789,0.49587c-0.18181,0.3115 -0.18181,0.69676 0,1.00825c0.18181,0.3115 0.51725,0.50097 0.87789,0.49587h3.58594l-10.29297,10.29297c-0.26124,0.25082 -0.36648,0.62327 -0.27512,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27512l10.29297,-10.29297v3.58594c-0.0051,0.36064 0.18438,0.69608 0.49587,0.87789c0.3115,0.18181 0.69676,0.18181 1.00825,0c0.3115,-0.18181 0.50097,-0.51725 0.49587,-0.87789v-5.87305c0.04031,-0.29141 -0.04973,-0.58579 -0.24615,-0.80479c-0.19643,-0.219 -0.47931,-0.34042 -0.77338,-0.33192zM6,7c-1.09306,0 -2,0.90694 -2,2v15c0,1.09306 0.90694,2 2,2h15c1.09306,0 2,-0.90694 2,-2v-10v-2.57812l-2,2v2.57813v8h-15v-15h8h2h0.57813l2,-2h-2.57812h-2z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0,0,256,256' width='18px' height='18px' fill-rule='nonzero'%3E%3Cg fill='white' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cg transform='scale(8.53333,8.53333)'%3E%3Cpath d='M25.98047,2.99023c-0.03726,0.00118 -0.07443,0.00444 -0.11133,0.00977h-5.86914c-0.36064,-0.0051 -0.69608,0.18438 -0.87789,0.49587c-0.18181,0.3115 -0.18181,0.69676 0,1.00825c0.18181,0.3115 0.51725,0.50097 0.87789,0.49587h3.58594l-10.29297,10.29297c-0.26124,0.25082 -0.36648,0.62327 -0.27512,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27512l10.29297,-10.29297v3.58594c-0.0051,0.36064 0.18438,0.69608 0.49587,0.87789c0.3115,0.18181 0.69676,0.18181 1.00825,0c0.3115,-0.18181 0.50097,-0.51725 0.49587,-0.87789v-5.87305c0.04031,-0.29141 -0.04973,-0.58579 -0.24615,-0.80479c-0.19643,-0.219 -0.47931,-0.34042 -0.77338,-0.33192zM6,7c-1.09306,0 -2,0.90694 -2,2v15c0,1.09306 0.90694,2 2,2h15c1.09306,0 2,-0.90694 2,-2v-10v-2.57812l-2,2v2.57813v8h-15v-15h8h2h0.57813l2,-2h-2.57812h-2z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     margin-left: 3px;
 }
 
@@ -92,11 +97,11 @@
     font-family: var(--serifUIFont);
     margin-bottom: 1rem;
     padding-bottom: 15px;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid var(--articleBorderColor);
 }
 
 .articleHeader h1 {
-    font-size: 3.45rem;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
     margin: 1rem 0;
     color: var(--secondaryColor);
     font-weight: 500;
@@ -145,7 +150,7 @@
     outline: none;
     transition: 0.25s;
     font-size: 18px;
-    background-color: var(--offsetBackColor);
+    background-color: var(--articlePanelColor);
     display: inline;
     width: fit-content;
     padding: 8px 14px;
@@ -180,11 +185,14 @@
 }
 
 .socialShareButtonContainer button {
+    color-scheme: dark;
+    color: var(--lightFontColor);
+    background-color: var(--secondaryColor);
     font-size: 18px;
     font-family: var(--sansUIFont);
     min-width: 116px;
     padding: 6px 13px;
-    border: 0;
+    border: 1px solid var(--secondaryColor);
     line-height: 1.50em;
     display: inline;
 }
