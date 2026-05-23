@@ -12,7 +12,7 @@ const SOCIAL_LINKS = [
   { href: 'https://x.com/ColinMcDermott', label: 'X', external: true },
   // TODO: confirm LinkedIn URL
   { href: 'https://www.linkedin.com/in/colinmcdermott/', label: 'LinkedIn', external: true },
-  { href: '/feed/', label: 'RSS', external: false },
+  { href: '/sitemap/', label: 'Sitemap', external: false },
 ]
 
 const Footer = () => {
