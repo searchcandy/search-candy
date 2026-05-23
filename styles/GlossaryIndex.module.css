@@ -1,0 +1,79 @@
+.GlossaryIndexContainer {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.GlossaryIndexHeader {
+    font-size: 19px;
+    font-weight: 400;
+    margin: 0 auto;
+    padding: 45px;
+    background-color: var(--offsetBackColor);
+}
+
+.GlossaryInnerContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 19px 0;
+}
+
+@media screen and (max-width: 1000px) {
+    .GlossaryIndexHeader {
+        padding: 22px 5px;
+    }
+    .GlossaryInnerContainer {
+        padding: 0 !important;
+    }
+}
+
+.GlossaryInnerContainer ul {
+    margin-top: var(--flowSpace);
+}
+
+.GlossaryInnerContainer ul li {
+    font-size: 1.18em;
+}
+
+.GlossaryInnerContainer ul li:hover {
+   color: var(--secondaryColor);
+}
+
+.GlossaryInnerContainer div {
+    min-width: 320px;
+    max-width: 400px;
+    padding: 5px;
+}
+
+.GlossaryIndexHeader h1 {
+    font-size: 2.6rem;
+    font-weight: 400;
+}
+
+.GlossaryIndexHeader h1, .GlossaryInnerContainer div h2 {
+    font-family: var(--serifUIFont);
+}
+
+.GlossaryInnerContainer div h2 {
+    font-size: 2.5em;
+    margin: 15px;
+    font-weight: 400;
+}
+
+.GlossaryInnerContainer div:hover {
+    outline: solid 1px;
+    background-color: var(--offsetBackColor);
+}
+
+@media screen and (max-width: 768px) {
+    .GlossaryInnerContainer {
+        flex-direction: row;
+        align-content: center;
+        justify-content: space-around;
+        padding: 5px;
+    }
+}

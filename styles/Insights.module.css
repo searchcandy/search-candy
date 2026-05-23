@@ -1,0 +1,56 @@
+.insightsPostsContainer {
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.insightsPostCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.6em 2.2em;
+    margin-top: 25px;
+    background-color: var(--offsetBackColor);
+    gap: 20px;
+}
+
+.insightsPostCard h2 {
+    font-size: 34px;
+    margin-top: 5px;
+    margin-bottom: auto;
+}
+
+.insightsPostCard h2 a:hover {
+    color:var(--secondaryColor);
+    text-decoration: underline;
+}
+
+.paginationContainer {
+    margin: 30px auto;
+    padding: 20px;
+    display: flex;
+}
+
+.paginationContainer nav {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    font-family: var(--sansUIFont);
+}
+
+/* Mobile rules */
+
+@media (max-width: 999px) {
+    .insightsPostCard {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .paginationNumberItem {
+    display: none;
+    }
+}

@@ -1,0 +1,152 @@
+.article {
+    font-size: 20px;
+    margin: 0 auto;
+    display: inline-flex;
+    flex-direction: column;
+    padding: var(--flowSpace) 8px;
+    max-width: 880px;
+}
+
+.postHeader {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.featuredPostWrapper {
+    max-height: 387px;
+}
+
+.postMetaContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    flex-direction: row;
+}
+
+.postMeta p {
+    font-family: monospace;
+    font-size: 15px;
+}
+
+.postHeader p:first-of-type {
+    font-size: 17px;
+}
+
+.articleContainer {
+    width: 100%;
+    display: flex;
+    background-color: rgb(0 0 0 / 7%);
+}
+
+.article img:first-of-type {
+    max-width: 100%;
+    object-fit: cover;
+    max-height: 395px;
+}
+
+.article h1 {
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+}
+
+.article h1, .article h2, .article h3, .article h4, .article h5  {
+    font-family: var(--serifUIFont);
+    font-weight: 400;
+}
+
+.article h2  {
+    font-size: 2.2rem;
+    padding-bottom: 15px;
+    margin-top: 37px;
+    margin-bottom: 32px;
+    border-bottom: solid 2px currentColor;
+}
+
+.article p {
+    max-width: 625px;
+    font-size: 21px;
+    line-height: 1.55em;
+    font-weight: 300;
+    margin-bottom: 18px;
+}
+
+.article p a {
+    text-decoration-color: var(--secondaryColor);
+}
+
+.article li {
+    max-width: 575px;
+    margin: 15px 0;
+}
+
+.article li::marker {
+    color: var(--secondaryColor);
+}
+
+.article strong {
+    font-weight: 600
+}
+
+.article figure {
+    max-width: 100%;
+    margin: 22px 0;
+}
+
+.author {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    background: var(--lightBackColor);
+    padding: 0px 7px;
+    border-radius: 32px;
+    border: solid 1px black;
+    scale: 0.8;
+}
+
+.author p a {
+    text-decoration: none;
+    color: black;
+}
+
+.author:hover {
+    cursor: pointer;
+}
+
+.author img {
+    margin-right:10px;
+    border-radius: 50%;
+}
+
+@media (prefers-color-scheme: dark) {
+    .articleContainer {background-color: rgba(0,0,0,.3)}
+    .article img:first-of-type {
+        opacity: 0.85;
+    }
+  }
+
+  /* Mobile rules */
+
+@media (max-width: 600px) {
+    .article {
+        padding: 0;
+    }
+    .article p, .article li {
+        font-size: 17px !important;
+    }
+    .article img:first-of-type {
+        max-height: 230px;
+    }
+    .article h1 {
+        font-size: 2rem;
+        margin-bottom: 0;
+        padding: 12px;
+        margin: 0;
+    }
+    .postMetaContainer, .articleInner {
+        padding: 12px;
+        margin: 0;
+    }
+}
