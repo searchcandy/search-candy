@@ -37,7 +37,7 @@ export default async function InsightsIndex() {
                 </h2>
                 <p className={nunitosans.className}>{formatDate(post.date)}</p>
               </div>
-              <div>
+              <div className={styles.insightsPostImage}>
                 <Link href={post.uri}>
                   {featuredImageUrl ? (
                     <Image

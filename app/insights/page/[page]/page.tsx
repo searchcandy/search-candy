@@ -58,7 +58,7 @@ export default async function InsightsPaginated({ params }: SearchCandyRouteProp
                 </h2>
                 <p className={nunitosans.className}>{formatDate(post.date)}</p>
               </div>
-              <div>
+              <div className={styles.insightsPostImage}>
                 <Link href={post.uri}>
                   {featuredImageUrl ? (
                     <Image

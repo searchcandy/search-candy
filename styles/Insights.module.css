@@ -27,24 +27,48 @@
     text-wrap: balance;
 }
 
+.insightsPostCard h2 a {
+    overflow-wrap: anywhere;
+}
+
 .insightsPostCard h2 a:hover {
     color:var(--secondaryColor);
     text-decoration: underline;
+}
+
+.insightsPostsTitleMeta {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .insightsPostsTitleMeta p {
     color: var(--articleMutedTextColor);
 }
 
+.insightsPostImage {
+    flex: 0 0 384px;
+    max-width: 384px;
+    width: 100%;
+}
+
+.insightsPostImage a {
+    display: block;
+}
+
 .insightsPostCard img {
+    display: block;
+    width: 100%;
+    height: auto;
     background-color: var(--darkBackColor);
     border: 1px solid var(--articleBorderColor);
 }
 
 .paginationContainer {
+    display: flex;
+    width: 100%;
+    max-width: 1040px;
     margin: 30px auto;
     padding: 20px;
-    display: flex;
 }
 
 .paginationContainer nav {
@@ -52,7 +76,12 @@
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    min-width: 0;
     font-family: var(--sansUIFont);
+}
+
+.paginationContainer nav ul {
+    flex-wrap: wrap;
 }
 
 .pagination a {
@@ -65,6 +94,10 @@
     .insightsPostCard {
         flex-direction: column;
         gap: 14px;
+    }
+    .insightsPostImage {
+        flex-basis: auto;
+        max-width: 100%;
     }
 }
 
