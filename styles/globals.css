@@ -12,17 +12,6 @@
   box-sizing: border-box;
 }
 
-/* Content visibility
-   Keep this away from header, main, and first sections. The homepage LCP
-   image lives in the first section, and content-visibility there can turn
-   a fast image load into a slow element render delay. */
-
-.main > section + section,
-body > section {
-  contain-intrinsic-size: auto none auto 500px;
-  content-visibility: auto;
-}
-
 /* Root variables */
 
 :root {
