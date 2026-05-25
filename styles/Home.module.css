@@ -90,14 +90,37 @@
   min-height: 400px;
 }
 
-/* Below the 3-column wrap point, skip straight to 1 column.
-   Avoids the awkward 2-on-top + 1-orphan layout the flex would
-   otherwise produce in the 600-880px range. Desktop flex layout
-   above this breakpoint is untouched. */
+/* Below the 3-column wrap point, switch to a horizontal scroll-snap row
+   with a peek of the next card so the swipe affordance is visible without
+   needing dot indicators. Desktop flex layout above this breakpoint is
+   untouched. */
 @media (max-width: 880px) {
+  .services {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    padding: 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .services::-webkit-scrollbar {
+    display: none;
+  }
   .services .card {
-    flex-basis: 100%;
-    max-width: 100%;
+    flex: 0 0 82%;
+    max-width: 82%;
+    margin: 20px 0 20px 16px;
+    scroll-snap-align: start;
+  }
+  .services .card:first-child {
+    margin-left: 20px;
+  }
+  .services .card:last-child {
+    margin-right: 20px;
   }
 }
 
