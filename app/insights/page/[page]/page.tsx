@@ -6,6 +6,10 @@ import { toPublicMediaUrl } from '@/lib/content'
 import styles from '@/styles/Insights.module.css'
 import { unna, nunitosans } from '@/components/fonts'
 
+// Page numbers outside the built range 404 statically instead of
+// triggering ISR renders.
+export const dynamicParams = false
+
 const POSTS_PER_PAGE = 10
 
 const formatDate = (value: string | number | Date) =>

@@ -12,7 +12,11 @@ import { cache } from 'react'
 const API_URL = process.env.WP_GRAPHQL_ENDPOINT
 const CF_ACCESS_CLIENT_ID = process.env.CF_ACCESS_CLIENT_ID
 const CF_ACCESS_CLIENT_SECRET = process.env.CF_ACCESS_CLIENT_SECRET
-const DEFAULT_REVALIDATE = 3600
+// 24h ISR. Content changes ship via redeploys (dynamicParams = false on the
+// dynamic routes), so revalidation is a freshness safety net, not the primary
+// update path. Hourly revalidation of ~280 pages was exhausting the Vercel
+// Hobby ISR write allowance on its own.
+const DEFAULT_REVALIDATE = 86400
 const MAX_ATTEMPTS = 3
 const INITIAL_BACKOFF_MS = 800
 const WPGRAPHQL_PAGE_SIZE = 100

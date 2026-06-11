@@ -19,9 +19,20 @@ function getWordPressOrigin() {
   }
 }
 
+// Vercel already sends Strict-Transport-Security on the production domain.
+// A full CSP is intentionally omitted: the site relies on inline scripts
+// (JSON-LD, mobile menu, share button) and experimental.inlineCss.
+const SECURITY_HEADERS = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+]
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   trailingSlash: true,
+  poweredByHeader: false,
   // Stable in Next 16. Auto-memoizes client components - eliminates the
   // need for most manual React.memo / useMemo / useCallback wrapping.
   reactCompiler: true,
@@ -30,6 +41,14 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     inlineCss: true,
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: SECURITY_HEADERS,
+      },
+    ]
   },
   async rewrites() {
     return {
@@ -45,6 +64,10 @@ const nextConfig: NextConfig = {
     }
   },
   images: {
+    // WP upload filenames change when media is replaced, so optimized
+    // images can be cached for a long time. Cuts repeat optimizations
+    // (a metered Vercel resource) for crawler-heavy traffic.
+    minimumCacheTTL: 2678400, // 31 days
     qualities: [75, 80, 100],
     remotePatterns: [
       ...(wordpressHostname ? [{ protocol: 'https' as const, hostname: wordpressHostname }] : []),

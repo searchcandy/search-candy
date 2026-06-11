@@ -22,7 +22,11 @@ Cloudflare Access protects the production GraphQL endpoint. Server-side GraphQL 
 
 Access should protect the CMS GraphQL/admin paths; keep `/wp-content/uploads/*` publicly reachable through the public frontend so legacy media URLs and post images keep working.
 
-The public canonical front-end is `https://searchcandy.uk`; `https://www.searchcandy.uk` redirects to the apex from Vercel. Helpers live in `lib/api.ts`. All fetches use `next: { revalidate: 3600 }` (1h ISR) by default. Image hosts that need to be in `next.config.ts` → `images.remotePatterns`:
+The public canonical front-end is `https://searchcandy.uk`; `https://www.searchcandy.uk` redirects to the apex from Vercel. Helpers live in `lib/api.ts`. All fetches use `next: { revalidate: 86400 }` (24h ISR) by default — revalidation is a freshness safety net for edits to existing content, not the primary publish path.
+
+**Every dynamic route sets `export const dynamicParams = false`.** URLs not returned by `generateStaticParams` get the prebuilt static 404 — no function invocation, no ISR cache write. This is deliberate: bot/scanner traffic to arbitrary URLs was exhausting the Vercel Hobby ISR allowance (one cache write per unique garbage URL). The consequence: **publishing a new post or glossary entry in WordPress requires a redeploy** for the URL to go live (trigger a Vercel Deploy Hook from WP on publish, or redeploy manually). Do not remove `dynamicParams = false` or shorten the revalidate window without revisiting the ISR usage math (~280 pages × revalidations/day × cache entries per page).
+
+Image hosts that need to be in `next.config.ts` → `images.remotePatterns`:
 - the private CMS hostname derived from `WP_GRAPHQL_ENDPOINT` — headless WP uploads and optimized images
 - `www.searchcandy.uk` and `searchcandy.uk` — legacy WP upload URLs during transition
 - `secure.gravatar.com` — author avatars

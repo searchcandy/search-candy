@@ -5,6 +5,11 @@ import { optimisePostContentImages, toPublicMediaUrl } from '@/lib/content'
 import styles from '@/styles/SinglePost.module.css'
 import { nunitosans } from '@/components/fonts'
 
+// Unknown URLs get the prebuilt 404 instead of an on-demand ISR render.
+// Bot/scanner traffic to arbitrary paths was generating an ISR cache write
+// per unique URL. New WordPress posts need a redeploy to appear.
+export const dynamicParams = false
+
 const sluggify = (uriParts: string[]) => uriParts[uriParts.length - 1]
 
 const formatDate = (value: string | number | Date) =>

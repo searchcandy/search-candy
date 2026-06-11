@@ -4,6 +4,11 @@ import { getAllGlossaryURIs, getGlossaryEntryByURI } from '@/lib/api'
 import ShareButton from '@/components/shareButton'
 import styles from '@/styles/GlossarySinglePage.module.css'
 
+// Unknown glossary URLs 404 statically instead of triggering ISR renders.
+// New glossary entries in WordPress need a redeploy (the hand-maintained
+// A-Z index page needs updating at the same time anyway).
+export const dynamicParams = false
+
 const buildURI = (parts: string[]) => '/seo/seo-glossary/' + parts.join('/') + '/'
 
 const formatDate = (value: string | number | Date) =>

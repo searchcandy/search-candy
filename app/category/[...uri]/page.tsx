@@ -4,6 +4,9 @@ import { getAllCategories, getCategoryBySlug, getPostsByCategorySlug } from '@/l
 import { unna, nunitosans } from '@/components/fonts'
 import styles from '@/styles/Page.module.css'
 
+// Unknown category URLs 404 statically instead of triggering ISR renders.
+export const dynamicParams = false
+
 const BASE = 'https://searchcandy.uk'
 
 const stripHtml = (html: string | null | undefined) =>

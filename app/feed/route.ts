@@ -4,7 +4,7 @@
 
 import { getPostsForFeed } from '@/lib/api'
 
-export const revalidate = 3600 // 1 hour
+export const revalidate = 86400 // 24 hours - new posts ship via redeploy anyway
 
 const SITE_URL = 'https://searchcandy.uk'
 const FEED_TITLE = 'Search Candy'
@@ -75,7 +75,7 @@ ${items}
   return new Response(xml, {
     headers: {
       'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+      'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
     },
   })
 }
