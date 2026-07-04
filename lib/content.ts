@@ -44,6 +44,24 @@ function normalisePostContentMediaUrls(html: string) {
   return html.split(WORDPRESS_UPLOADS_PREFIX).join('/wp-content/uploads/')
 }
 
+// Strip tags and decode the entities WordPress commonly emits so CMS HTML
+// can be reused as plain text (meta descriptions, excerpt listings).
+export function htmlToPlainText(html: string | null | undefined) {
+  return (html || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCodePoint(parseInt(code, 16)))
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&hellip;/gi, '…')
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 type ImageOptimisationOptions = {
   eagerFirstImage?: boolean
 }

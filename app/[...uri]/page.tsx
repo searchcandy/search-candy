@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getAllPostURIs, getPostBySlug } from '@/lib/api'
-import { optimisePostContentImages, toPublicMediaUrl } from '@/lib/content'
+import { htmlToPlainText, optimisePostContentImages, toPublicMediaUrl } from '@/lib/content'
 import styles from '@/styles/SinglePost.module.css'
 import { nunitosans } from '@/components/fonts'
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: SearchCandyRouteProps<{ uri: 
     ? post.uri
     : `https://searchcandy.uk${post.uri}`
   const ogImage = toPublicMediaUrl(post.featuredImage?.node?.sourceUrl, { absolute: true })
-  const description = post.excerpt?.replace(/<[^>]*>/g, '').trim() || undefined
+  const description = htmlToPlainText(post.excerpt) || undefined
   return {
     title: post.title,
     description,

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getAllGlossaryURIs, getGlossaryEntryByURI } from '@/lib/api'
+import { htmlToPlainText } from '@/lib/content'
 import ShareButton from '@/components/shareButton'
 import styles from '@/styles/GlossarySinglePage.module.css'
 
@@ -13,7 +14,7 @@ const buildURI = (parts: string[]) => '/seo/seo-glossary/' + parts.join('/') + '
 
 // First ~160 chars of the entry body, cut at a word boundary, for meta descriptions.
 const summarise = (html: string | null | undefined, maxLength = 160) => {
-  const text = (html || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+  const text = htmlToPlainText(html)
   if (!text) return undefined
   if (text.length <= maxLength) return text
   const cut = text.slice(0, maxLength)

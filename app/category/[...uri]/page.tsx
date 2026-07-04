@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { getAllCategories, getCategoryBySlug, getPostsByCategorySlug } from '@/lib/api'
+import { htmlToPlainText } from '@/lib/content'
 import { unna, nunitosans } from '@/components/fonts'
 import styles from '@/styles/Page.module.css'
 
@@ -8,9 +9,6 @@ import styles from '@/styles/Page.module.css'
 export const dynamicParams = false
 
 const BASE = 'https://searchcandy.uk'
-
-const stripHtml = (html: string | null | undefined) =>
-  (html || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
 
 const formatDate = (value: string | number | Date) =>
   new Date(value).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -97,7 +95,7 @@ export default async function CategoryArchive({ params }: SearchCandyRouteProps<
                   <Link href={post.uri}>{post.title}</Link>
                 </h3>
                 {post.excerpt && (
-                  <p className={styles.hubPostsExcerpt}>{stripHtml(post.excerpt)}</p>
+                  <p className={styles.hubPostsExcerpt}>{htmlToPlainText(post.excerpt)}</p>
                 )}
               </li>
             ))}
