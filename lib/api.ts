@@ -54,6 +54,10 @@ type PostURIConnectionData = {
   posts?: SearchCandyConnection<SearchCandyURIEntry> | null
 }
 
+type PostSitemapConnectionData = {
+  posts?: SearchCandyConnection<SearchCandyPostSitemapEntry> | null
+}
+
 type PostsConnectionData = {
   posts?: SearchCandyConnection<SearchCandyPost> | null
 }
@@ -160,7 +164,11 @@ async function fetchAPI<TData extends SearchCandyGraphQLData = SearchCandyGraphQ
       return json.data ?? ({} as TData)
     } catch (err) {
       lastError = err
-      if (err instanceof GraphQLAccessConfigError || attempt >= MAX_ATTEMPTS) throw err
+      // 4xx never succeeds on retry (and 401/403 must fail fast so builds block).
+      const isClientHTTPError = err instanceof GraphQLHTTPError && err.status < 500
+      if (err instanceof GraphQLAccessConfigError || isClientHTTPError || attempt >= MAX_ATTEMPTS) {
+        throw err
+      }
       await sleep(INITIAL_BACKOFF_MS * 2 ** (attempt - 1))
     }
   }
@@ -232,6 +240,25 @@ export async function getAllPostURIs(): Promise<string[]> {
     []
   )
   return nodes.map((node) => node.uri)
+}
+
+export async function getAllPostEntriesForSitemap(): Promise<SearchCandyPostSitemapEntry[]> {
+  return fetchWithBuildFallback(
+    'getAllPostEntriesForSitemap',
+    () =>
+      fetchConnectionNodes<SearchCandyPostSitemapEntry, PostSitemapConnectionData>({
+        query: `
+        query AllPostSitemapEntries($first: Int!, $after: String) {
+          posts(first: $first, after: $after) {
+            nodes { uri modifiedGmt }
+            pageInfo { hasNextPage endCursor }
+          }
+        }
+      `,
+        getConnection: (data) => data.posts,
+      }),
+    []
+  )
 }
 
 const POST_FIELDS = `
@@ -461,7 +488,7 @@ export async function getAllGlossaryEntriesForSitemap(): Promise<
         query: `
         query GlossaryEntries($first: Int!, $after: String) {
           pages(first: $first, after: $after, where: { parent: "3592", orderby: { field: TITLE, order: ASC } }) {
-            nodes { uri title }
+            nodes { uri title modifiedGmt }
             pageInfo { hasNextPage endCursor }
           }
         }

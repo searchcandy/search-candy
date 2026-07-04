@@ -94,6 +94,12 @@ declare global {
   type SearchCandyGlossarySitemapEntry = {
     uri: string
     title: string
+    modifiedGmt?: string
+  }
+
+  type SearchCandyPostSitemapEntry = {
+    uri: string
+    modifiedGmt?: string
   }
 
   type SearchCandyFetchAPIOptions = {

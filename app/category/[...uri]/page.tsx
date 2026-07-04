@@ -15,7 +15,8 @@ const stripHtml = (html: string | null | undefined) =>
 const formatDate = (value: string | number | Date) =>
   new Date(value).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
 
-const slugFromParts = (parts: string[]) => parts[parts.length - 1]
+// Empty input yields '' → slug lookup misses → notFound().
+const slugFromParts = (parts: string[]) => parts[parts.length - 1] ?? ''
 
 const pathPartsFromCategoryURI = (uri: string) => {
   const parts = uri.replace(/^\/|\/$/g, '').split('/').filter(Boolean)

@@ -12,7 +12,8 @@ export async function POST(request: Request) {
   const formData = await request.formData()
   const email = (formData.get('email') || '').toString().trim()
 
-  if (!EMAIL_RX.test(email)) {
+  // 254 is the RFC 5321 ceiling; anything longer is garbage input.
+  if (email.length > 254 || !EMAIL_RX.test(email)) {
     return NextResponse.redirect(newsletterFallbackUrl(request), { status: 303 })
   }
 

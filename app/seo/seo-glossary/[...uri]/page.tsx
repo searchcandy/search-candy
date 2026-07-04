@@ -11,6 +11,15 @@ export const dynamicParams = false
 
 const buildURI = (parts: string[]) => '/seo/seo-glossary/' + parts.join('/') + '/'
 
+// First ~160 chars of the entry body, cut at a word boundary, for meta descriptions.
+const summarise = (html: string | null | undefined, maxLength = 160) => {
+  const text = (html || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+  if (!text) return undefined
+  if (text.length <= maxLength) return text
+  const cut = text.slice(0, maxLength)
+  return `${cut.slice(0, cut.lastIndexOf(' '))}…`
+}
+
 const formatDate = (value: string | number | Date) =>
   new Date(value).toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
 
@@ -27,9 +36,18 @@ export async function generateMetadata({ params }: SearchCandyRouteProps<{ uri: 
   const fullUri = buildURI(uri)
   const entry = await getGlossaryEntryByURI(fullUri)
   if (!entry) return {}
+  const canonical = `https://searchcandy.uk${fullUri}`
+  const description = summarise(entry.content)
   return {
     title: entry.title,
-    alternates: { canonical: `https://searchcandy.uk${fullUri}` },
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: entry.title,
+      description,
+      url: canonical,
+      siteName: 'Search Candy',
+    },
   }
 }
 

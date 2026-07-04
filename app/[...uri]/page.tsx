@@ -10,7 +10,8 @@ import { nunitosans } from '@/components/fonts'
 // per unique URL. New WordPress posts need a redeploy to appear.
 export const dynamicParams = false
 
-const sluggify = (uriParts: string[]) => uriParts[uriParts.length - 1]
+// Empty input yields '' → slug lookup misses → notFound().
+const sluggify = (uriParts: string[]) => uriParts[uriParts.length - 1] ?? ''
 
 const formatDate = (value: string | number | Date) =>
   new Date(value).toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
@@ -28,20 +29,23 @@ export async function generateMetadata({ params }: SearchCandyRouteProps<{ uri: 
   const slug = sluggify(uri)
   const post = await getPostBySlug(slug)
   if (!post) return {}
-  const canonical = post.uri?.startsWith('http')
+  const canonical = post.uri.startsWith('http')
     ? post.uri
     : `https://searchcandy.uk${post.uri}`
   const ogImage = toPublicMediaUrl(post.featuredImage?.node?.sourceUrl, { absolute: true })
+  const description = post.excerpt?.replace(/<[^>]*>/g, '').trim() || undefined
   return {
     title: post.title,
-    description: post.excerpt?.replace(/<[^>]*>/g, '').trim() || undefined,
+    description,
     alternates: { canonical },
     openGraph: {
       type: 'article',
       title: post.title,
       url: canonical,
-      description: post.excerpt?.replace(/<[^>]*>/g, '').trim() || undefined,
+      description,
       siteName: 'Search Candy',
+      publishedTime: post.date,
+      modifiedTime: post.modifiedGmt,
       ...(ogImage ? { images: [ogImage] } : {}),
       authors: post.author?.node?.name ? [post.author.node.name] : undefined,
     },
